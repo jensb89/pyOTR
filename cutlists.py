@@ -5,9 +5,10 @@ class Cutlist(object):
 	"""docstring for Cutlist"""
 	___SERVER___ = 'http://cutlist.at/'
 
-	def __init__(self, filename):
+	def __init__(self, filename, filesize = 0):
 		super(Cutlist, self).__init__()
 		self.filename = filename
+		self.filesize = filesize
 	
 	def search(self,mode='size'):
 		url_str = self.___SERVER___ + 'getxml.php?version=0.9.8.0&'+mode+'='+self.filename
@@ -16,9 +17,14 @@ class Cutlist(object):
 		data = file.read()
 		file.close()
 
+		if data == '':
+			print 'No Cutlist found'
+			self.data_cl_search = []
+			return 1
+
 		root = ET.fromstring(data)
 		num_lists = len(root.findall('cutlist'))
-		print num_lists
+		print str(num_lists) + ' Cutlist(s) found.'
 
 		data_cl = []
 		for elem in root.findall('cutlist'):
@@ -33,6 +39,7 @@ class Cutlist(object):
 			data_cl.append({'rating_author':rating_author,'rating':rating,'author':author,'dl_count':dl_count,'id':id})
 
 		self.data_cl_search = data_cl
+		return 0
 
 	def sort_cutlists(self):
 		print self.data_cl_search
@@ -55,6 +62,9 @@ class Cutlist(object):
 			if saveToFile:
 				with open(self.filename+'.cutlist','wb') as output:
 					output.write(cutlist)
+			return 0
+		else:
+			return 1
 
 
 
