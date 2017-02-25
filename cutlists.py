@@ -58,7 +58,8 @@ class Cutlist(object):
 	def download(self,toprated=True,saveToFile=True,folder=''):
 		if toprated == True and len(self.sorted_list)>0:
 			print 'Download cutlist:'
-			print 'Author:' + self.sorted_list[0]['author']
+			if self.sorted_list[0]['author'] is not None:
+				print 'Author:' + self.sorted_list[0]['author']
 			print 'Rating:' + str(self.sorted_list[0]['rating'])
 			print 'Rating Author:' + str(self.sorted_list[0]['rating_author'])
 			print 'Downloadcount:' + str(self.sorted_list[0]['dl_count'])
