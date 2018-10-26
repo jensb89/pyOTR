@@ -59,7 +59,7 @@ class Cutlist(object):
 		if toprated == True and len(self.sorted_list)>0:
 			print 'Download cutlist:'
 			if self.sorted_list[0]['author'] is not None:
-				print 'Author:' + self.sorted_list[0]['author']
+				print 'Author:' + self.sorted_list[0]['author'].encode('utf-8','ignore')
 			print 'Rating:' + str(self.sorted_list[0]['rating'])
 			print 'Rating Author:' + str(self.sorted_list[0]['rating_author'])
 			print 'Downloadcount:' + str(self.sorted_list[0]['dl_count'])
