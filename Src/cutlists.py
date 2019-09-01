@@ -2,15 +2,18 @@ import xml.etree.ElementTree as ET
 import urllib2
 import os
 from shutil import move
+import re
 
 
-class Cutlist(object):
+class CutlistDownloader(object):
 	"""docstring for Cutlist"""
 	___SERVER___ = 'http://cutlist.at/'
 
 	def __init__(self, filename, filesize = 0):
-		super(Cutlist, self).__init__()
-		self.filename = filename
+		super(CutlistDownloader, self).__init__()
+		#Strip path from filename first
+		head, tail = os.path.split(filename)
+		self.filename = tail
 		self.filesize = filesize
 	
 	def search(self,mode='size'):
@@ -80,4 +83,39 @@ class Cutlist(object):
 			return 1
 
 
+class CutlistReader(object):
+	def __init__(self, cutlist):
+		self.cutlist = cutlist
+		self.formatFrames = False
+		self.formatTime = False
+	
+	def loadCutlistFile(self):
+		with open(self.cutlist, 'r') as myfile:
+			self.data = myfile.read()
+	
+	def parseCutlist(self):
+		#check if input is file or string
+		if self.cutlist[-8:] == '.cutlist':
+			self.loadCutlistFile()
+		else:
+			self.data = self.cutlist
 
+		data = self.data
+		self.fps = float(re.findall("FramesPerSecond=(\d+\.*\d*)", data)[0])
+		self.numCuts = int(re.findall("NoOfCuts=(\d*)", data)[0])
+		self.suggestedName = re.findall("SuggestedMovieName=(.+)", data)[0]
+
+		self.cutsTime =  re.findall("Start=(\d+\.?\d*)", data)
+		self.cutsDuration = re.findall("Duration=(\d+\.?\d*)", data)
+		self.cutsFrame = re.findall("StartFrame=(\d+\.?\d*)", data)
+		self.cutsFrameDuration = re.findall("DurationFrames=(\d+\.?\d*)", data)
+
+		if (len(self.cutsTime) > 0)  and (len(self.cutsTime) == len(self.cutsDuration) ):
+			self.formatTime = True
+
+		if (len(self.cutsFrame) > 0)  and (len(self.cutsFrame) == len(self.cutsFrameDuration) ):
+			self.formatFrames = True
+		
+		if not self.formatFrames and not self.formatTime:
+			print "Error in parsing Cutlist file!"
+			raise

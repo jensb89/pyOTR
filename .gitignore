@@ -56,3 +56,23 @@ docs/_build/
 
 # PyBuilder
 target/
+
+#OTR
+*.cutlist
+
+# VSCode
+.vscode/
+
+# Video files
+*.avi
+*.mp4
+*.mpeg
+*.webm
+*.mov
+
+# Cutlists
+*.cutlist
+
+# Developer
+*.html
+*.m3u8

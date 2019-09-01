@@ -1,4 +1,4 @@
-from cutlists import Cutlist
+from Src.cutlists import CutlistDownloader
 import sys
 
 if __name__ == '__main__':
@@ -16,7 +16,7 @@ if __name__ == '__main__':
         else:
             folder = ''
 
-        c=Cutlist(filename,filesize)
+        c=CutlistDownloader(filename,filesize)
         ret = c.search(mode='ofsb')
         if ret == 1:
             ret = c.search(mode='name')
