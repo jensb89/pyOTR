@@ -1,4 +1,5 @@
 import subprocess
+import os
 
 class OTRDecoder(object):
     
@@ -20,14 +21,20 @@ class OTRDecoder(object):
         ret = subprocess.check_output(commandStr)
         print ret
         # TODO:
-        # move OTR file to BACKUPFOLDER if file successfully decoded (check if decoded file exists)
+        # move OTR file to BACKUPFOLDER if file successfully decoded (check if decoded file exists) // should be moved by the -o tag
         # move decoded OTR file to DECODIR
         return ret
     
     def decodeOTRFolder(self, folder):
         # go trhough all files in folder
-        # decodeOTRFile(self)
-        return
+        ret = -1
+        for filename in os.listdir(folder):
+            if filename.endswith(".otrkey"):
+                ret = self.decodeOTRFile(folder + filename)
+                continue
+            else:
+                continue
+        return ret
 
 class OTRDecoderArmv7(OTRDecoder):
     def __init__():
@@ -36,7 +43,7 @@ class OTRDecoderArmv7(OTRDecoder):
         self.decoder = "otrArmv7Decoder"
 
 class OTRDecoderBatch(object):
-    # Takes list of files, returns string of decoded file in interation
+    # Takes list of files, returns string of decoded file in iteration
     def __init__(self, files):
         self.data = files
         self.numFiles = len(files)

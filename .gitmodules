@@ -1,0 +1,3 @@
+[submodule "Utils/OtrRenameForTvShows"]
+	path = Utils/OtrRenameForTvShows
+	url = https://github.com/jensb89/OTR-file-rename-for-tv-shows.git

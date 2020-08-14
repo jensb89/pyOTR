@@ -110,6 +110,8 @@ class CutlistReader(object):
 		self.cutsFrame = re.findall("StartFrame=(\d+\.?\d*)", data)
 		self.cutsFrameDuration = re.findall("DurationFrames=(\d+\.?\d*)", data)
 
+		#TODO: NEEDS SORTING (cut5 might be first cut etc)
+
 		if (len(self.cutsTime) > 0)  and (len(self.cutsTime) == len(self.cutsDuration) ):
 			self.formatTime = True
 
