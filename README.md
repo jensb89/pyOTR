@@ -41,7 +41,7 @@ optional arguments:
 ```
 
 ## Tests
-[![Build Status](https://travis-ci.org/jensb89/pyOTR.svg?branch=master)](https://travis-ci.org/jensb89/pyOTR)
+[![Build Status](https://travis-ci.com/jensb89/pyOTR.svg?branch=master)](https://travis-ci.com/jensb89/pyOTR)
 
 Run tests from main folder:
 python Tests/unitTests.py
