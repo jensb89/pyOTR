@@ -5,8 +5,17 @@ A python tool to decode, cut and rename video files from onlinetvrecorder.com.
 ## Setup
 Fill in the folder dirs in the config_sample.py and rename the file to config.py.
 
-On mac to compile avcut:
+Download the otrdecoder from https://www.onlinetvrecorder.com/v2/software/ and place it in the Bin folder.
+
+Put a binary of avcut in the Bin folder.
+
+To compile avcut in MacOS, ffmpeg must be installed beforehand. E.g. with
+```
 brew install sdl2 ffmpeg
+```
+Then the script installAvcut.sh can be called to download the newest avcut software and compile the binary. The script already places the file in the Bin/Mac folder.
+
+To cross compile avcut, e.g. for a Synology NAS armv7 system, follow these instructions: https://github.com/jensb89/avcut/blob/master/HOWTO_Compile_for_Synology_NAS.MD
 
 ## Usage
 ```
@@ -27,8 +36,7 @@ optional arguments:
                         If this option is used, a manual cutlist file can be
                         used. Otherwise the best cutlist available from
                         cutlist.at will be used instead.
-  --no-file-rename NO_FILE_RENAME
-                        do not try to rename the file with the season and
+  --no-file-rename      do not try to rename the file with the season and
                         episode information
 ```
 

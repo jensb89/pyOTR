@@ -3,7 +3,7 @@ import urllib2
 import os
 from shutil import move
 import re
-
+import logging
 
 class CutlistDownloader(object):
 	"""docstring for Cutlist"""
@@ -15,25 +15,27 @@ class CutlistDownloader(object):
 		head, tail = os.path.split(filename)
 		self.filename = tail
 		self.filesize = filesize
+		self.logger = logging.getLogger("pyOTR.Cutlist")
 	
 	def search(self,mode='size'):
 		if mode=='ofsb' and self.filesize > 1:
 			url_str = self.___SERVER___ + 'getxml.php?version=0.9.8.0&'+mode+'='+str(self.filesize)
 		else:
 			url_str = self.___SERVER___ + 'getxml.php?version=0.9.8.0&'+mode+'='+self.filename
-		print url_str
+		self.logger.info("\n\t==> Searching cutlist for %s\n" % self.filename) 
+		self.logger.debug("Using url %s" % url_str)
 		file = urllib2.urlopen(url_str)
 		data = file.read()
 		file.close()
 
 		if data == '':
-			print 'No Cutlist found'
+			self.logger.info('No Cutlist found!\n')
 			self.data_cl_search = []
 			return 1
 
 		root = ET.fromstring(data)
 		num_lists = len(root.findall('cutlist'))
-		print str(num_lists) + ' Cutlist(s) found.'
+		self.logger.info(str(num_lists) + ' Cutlist(s) found.')
 
 		data_cl = []
 		for elem in root.findall('cutlist'):
@@ -60,12 +62,12 @@ class CutlistDownloader(object):
 
 	def download(self,toprated=True,saveToFile=True,folder=''):
 		if toprated == True and len(self.sorted_list)>0:
-			print 'Download cutlist:'
+			self.logger.info('Download cutlist:')
 			if self.sorted_list[0]['author'] is not None:
 				print 'Author:' + self.sorted_list[0]['author'].encode('utf-8','ignore')
-			print 'Rating:' + str(self.sorted_list[0]['rating'])
-			print 'Rating Author:' + str(self.sorted_list[0]['rating_author'])
-			print 'Downloadcount:' + str(self.sorted_list[0]['dl_count'])
+			self.logger.info('Rating:' + str(self.sorted_list[0]['rating']))
+			self.logger.info('Rating Author:' + str(self.sorted_list[0]['rating_author']))
+			self.logger.info('Downloadcount:' + str(self.sorted_list[0]['dl_count']))
 			response = urllib2.urlopen(self.___SERVER___+'getfile.php?id=' + self.sorted_list[0]['id'])
 			cutlist = response.read()
 			self.cutlist = cutlist
@@ -88,6 +90,7 @@ class CutlistReader(object):
 		self.cutlist = cutlist
 		self.formatFrames = False
 		self.formatTime = False
+		self.logger = logging.getLogger("pyOTR.CutList")
 	
 	def loadCutlistFile(self):
 		with open(self.cutlist, 'r') as myfile:
@@ -119,5 +122,5 @@ class CutlistReader(object):
 			self.formatFrames = True
 		
 		if not self.formatFrames and not self.formatTime:
-			print "Error in parsing Cutlist file!"
-			raise
+			self.logger.error("Error in parsing Cutlist file!")
+			return

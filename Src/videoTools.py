@@ -1,5 +1,7 @@
 import subprocess
 import os
+import logging
+from shutil import move
 
 class VideoTool(object):
 	BinDirectory = 'Bin/'
@@ -14,6 +16,7 @@ class Cut(VideoTool):
 		self.filename = filename
 		self.cutReaderObject = cutReaderObject
 		self.cutTimes = [] #array for each cutting timestamp
+		self.logger = logging.getLogger('pyOTR.Cut')
 	
 	#@abstractmethod
 	
@@ -26,10 +29,10 @@ class AVCut(Cut):
 	# Start cutting with avcut
 	def cut(self):
 		#command = "avcut" + self.timeString + ' -'
-		print "Cut file %s with FrameOffset %d" % (self.filename, self.frameOffset)
+		self.logger.info("Cut file %s with FrameOffset %d" % (self.filename, self.frameOffset))
 		if len(self.cutTimes) == 0:
-			print "AVCut Error: No cuts found. Run convertCutTimes first!"
-			raise
+			self.logger.error("AVCut Error: No cuts found. Run convertCutTimes first!")
+			return
 		path, fileName = os.path.split(self.filename)
 		fileNameCut, extension = os.path.splitext(fileName)
 		fileNameCut = fileNameCut + '-cut' + extension
@@ -37,9 +40,14 @@ class AVCut(Cut):
 		for cutTime in self.cutTimes:
 			commandStr.append("%.3f" % cutTime)
 		commandStr.append('-')
-		print "Calling " + ' '.join(commandStr)
+		self.logger.info("Calling " + ' '.join(commandStr))
 		ret = subprocess.call(commandStr)
-		print "AVCut exits with code %d" % ret
+		self.logger.info("AVCut exits with code %d\n" % ret)
+		if (ret==0):
+			if not(os.path.isdir(self.CUTDIR + '#recycle/')):
+				os.mkdir(self.CUTDIR + '#recycle')
+			move(self.filename, self.CUTDIR + '#recycle')
+
 
 	# Convert the times from the cutlists so that they can be used with avcut
 	# Mode is either "Time" or "Frames"

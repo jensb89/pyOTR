@@ -16,3 +16,7 @@ OTRMAIL = "mail@mprovider.de"
 
 # OTR PW
 OTRPW = "123456"
+
+# LOGGING
+enableFileLogging = True
+LOGDIR = '/Users/user/Movies/Cut/'
