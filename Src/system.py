@@ -5,7 +5,6 @@ import subprocess
 import os
 import logging
 
-
 class SystemInfo(object):
     def __init__(self):
         (system, node, release, version, machine, processor) = platform.uname()
@@ -15,7 +14,11 @@ class SystemInfo(object):
         self.version = version
         self.machine = machine
         self.processor = processor
-        self.user = os.getlogin()
+        if self.systemOS=="Linux":
+            import pwd
+            self.user = pwd.getpwuid(os.getuid()).pw_name
+        else:
+            self.user = os.getlogin()
         self.logger = logging.getLogger('pyOTR.system')
     
     def printSystemInfos(self):

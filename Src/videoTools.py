@@ -36,6 +36,7 @@ class AVCut(Cut):
 		path, fileName = os.path.split(self.filename)
 		fileNameCut, extension = os.path.splitext(fileName)
 		fileNameCut = fileNameCut + '-cut' + extension
+		#todo: check for avcut version. Version 0.2 does not support -i and -o, but just avcut inputfile outputfile cuts!
 		commandStr = [self.BinDirectory+'avcut','-i',self.filename,'-o',self.CUTDIR+fileNameCut]
 		for cutTime in self.cutTimes:
 			commandStr.append("%.3f" % cutTime)

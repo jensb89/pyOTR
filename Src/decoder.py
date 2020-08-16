@@ -13,21 +13,26 @@ class OTRDecoder(object):
         self.deleteOTRFile = deleteOTRFile
         self.outputFolder = '.'
         self.decoderName = 'otrdecoder'
+        self.fileName = ''
         self.logger = logging.getLogger('pyOTR.decoder')
 
     def setOutputFolder(self, outputFolder):
         self.outputFolder = outputFolder
     
     def decodeOTRFile(self, fileName):
+        self.fileName = fileName
         self.logger.info("\n\t ==> Decoding file %s with %s" % (fileName, self.BINDIRECTORY+self.decoderName))
         commandStr = [self.BINDIRECTORY+self.decoderName,'-i',fileName,"-e",self.USERNAME,"-p",self.PASSWORD,"-o",self.outputFolder]
+        return self.callOtrDecoderBinary(commandStr)
+    
+    def callOtrDecoderBinary(self, commandStr):
         try:
             out = subprocess.check_output(commandStr)
             self.logger.debug(out)
             self.logger.info("\t ==> Success!\n")
             ret = 0
             if self.deleteOTRFile:
-                os.remove(fileName)
+                os.remove(self.fileName)
         except subprocess.CalledProcessError as err:
             self.logger.info("\t ==> Failed!\n")
             self.logger.error("%s" % err)
@@ -51,7 +56,13 @@ class OTRDecoderArmv7(OTRDecoder):
     def __init__(self, deleteOTRFile=False):
         super(OTRDecoderArmv7, self).__init__(deleteOTRFile)
         #os.environ['LD_LIBRARY_PATH'] = path to curl librarys #set for the time of execution
-        self.decoderName = "otrArmv7Decoder"
+        self.decoderName = "otrpidecoder"
+
+    def decodeOTRFile(self, fileName):
+        self.fileName = fileName
+        self.logger.info("\n\t ==> Decoding file %s with %s" % (fileName, self.BINDIRECTORY+self.decoderName))
+        commandStr = [self.BINDIRECTORY+self.decoderName,"-d","-e",self.USERNAME,"-p",self.PASSWORD,"-D",self.outputFolder,fileName]
+        return self.callOtrDecoderBinary(commandStr)
 
 class OTRDecoderBatch(object):
     # Takes list of files, returns string of decoded file in iteration

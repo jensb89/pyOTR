@@ -17,6 +17,13 @@ Then the script installAvcut.sh can be called to download the newest avcut softw
 
 To cross compile avcut, e.g. for a Synology NAS armv7 system, follow these instructions: https://github.com/jensb89/avcut/blob/master/HOWTO_Compile_for_Synology_NAS.MD
 
+### Synology NAS
+For a synology NAS with armv7 processor (e.g. DS116j), the otrpidecoder (raspberry pi armv7) must be downloaded and placed under Bin/armv7.
+Additionally, a libcurl.so file is needed, otherwise the error "/otrpidecoder: /lib/libcurl.so.4: version `CURL_OPENSSL_3' not found (required by ./otrpidecoder)"
+will show up. The lib files have to be copied to Bin/armv7/libarmv7.
+
+If python BeautifulSoup is not found, this can be downloaded as a standalone lib and placed under the pyOTR main directory in the folder bs4.
+
 ## Usage
 ```
 usage: pyOtr [-h] [--single-file fileName] [--decode-only] [--cut-only]
@@ -45,6 +52,4 @@ optional arguments:
 
 Run tests from main folder:
 python Tests/unitTests.py
-
-Todo: CI Job
 

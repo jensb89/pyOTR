@@ -79,8 +79,15 @@ class pyOTR(object):
         if self.system.systemOS == "Darwin":
             VideoTool.BinDirectory = "Bin/Mac/"
             OTRDecoder.BINDIRECTORY = "Bin/Mac/"
-        elif self.system.systemOS == "Linux" and self.system.machine == 'armv7':
+        elif self.system.systemOS == "Linux" and (self.system.machine == 'armv7' or self.system.machine == 'armv7l'):
             VideoTool.BinDirectory = "Bin/armv7/"
+            OTRDecoder.BINDIRECTORY = "Bin/armv7/"
+            # copy the lib files such as libcurl.so under Bin/armv7/libarmv7
+            # fix for synology nas: export the library path
+            os.environ["LD_LIBRARY_PATH"] = os.path.dirname(os.path.abspath(__file__)) + "/Bin/armv7/libarmv7"
+            self.logger.info("Set LD_LIBRARY_PATH to %s" % (os.path.dirname(os.path.abspath(__file__)) + "/Bin/armv7/libarmv7"))
+        else:
+            self.logger.error("Your system is currently not supported!\n")
 
     def decode(self):
         # decode the otrkey files
